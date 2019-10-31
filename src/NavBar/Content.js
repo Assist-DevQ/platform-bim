@@ -10,11 +10,7 @@ class Content extends React.Component {
                 <MDBView>
                     <MDBMask className="h-100 justify-content-center align-items-center">
                         <MDBContainer>
-<<<<<<< HEAD
-                                <h1 className="text h1-responsive font-weight-bold mt-sm-5"><img className="cl-img" src={logo} alt=""/>Automatic visual QA tool</h1>
-=======
-                                <h1 className="text h1-responsive font-weight-bold mt-sm-5"><img classname="cl-img" src={logo} alt="" className="img-fluid" />Automatic visual QA tool</h1>
->>>>>>> d56efbeebd010bd3b6ffb62a73bf6971db60b4df
+                                <h1 className="text h1-responsive font-weight-bold mt-sm-5"><img className="img-fluid" src={logo} alt=""/>Automatic visual QA tool</h1>
                                 <hr className="hr-light" />
                         </MDBContainer>
                     </MDBMask>
