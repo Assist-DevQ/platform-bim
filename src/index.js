@@ -18,4 +18,10 @@ render(
         <App />
     </Provider>,
     document.getElementById('app')
+<<<<<<< HEAD
 );
+=======
+);
+
+//asd
+>>>>>>> d56efbeebd010bd3b6ffb62a73bf6971db60b4df
