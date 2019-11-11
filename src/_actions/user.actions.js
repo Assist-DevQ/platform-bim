@@ -86,6 +86,7 @@ function _delete(id) {
             .then(
                 user => { 
                     dispatch(success(id));
+                    //window.location.reload(true);//reload pt delete cu modal
                 },
                 error => {
                     dispatch(failure(id, error));
