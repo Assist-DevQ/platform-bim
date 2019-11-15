@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { userActions } from "../_actions";
+import { userActions, projectActions } from "../_actions";
 
 class Pages extends React.Component {
     constructor(props) {
@@ -12,6 +12,7 @@ class Pages extends React.Component {
 
     componentDidMount() {
         this.props.getUsers();
+        this.props.getProjects();
     }
 
     handleDeleteUser(id) {
@@ -24,7 +25,7 @@ class Pages extends React.Component {
     }
 
     render() {
-        const { users, user, page } = this.props;
+        const { projects, users, user, page } = this.props;
         return (
             <div>
                 {page === "profile" &&
@@ -48,7 +49,7 @@ class Pages extends React.Component {
                             </li>
                             <li className="breadcrumb-item active">Users</li>
                         </ol>
-                        {/* {users.loading && <em>Loading users...</em>} */}
+                        {users.loading && <em>Loading users...</em>}
                         {users.error && <span className="text-danger">ERROR: {users.error}</span>}
                         {users.items &&
                             <div className="card">
@@ -98,9 +99,9 @@ class Pages extends React.Component {
                             <li className="breadcrumb-item active">Projects</li>
                         </ol>
 
-                        {/* {projects.loading && <em>Loading projects...</em>} */}
-                        {users.error && <span className="text-danger">ERROR: {users.error}</span>}
-                        {users.items &&
+                        {projects.loading && <em>Loading projects...</em>}
+                        {projects.error && <span className="text-danger">ERROR: {projects.error}</span>}
+                        {projects.items &&
                             <div className="card">
                                 <div className="card-header">
                                     <i className="fa fa-table"></i> Projects</div>
@@ -114,10 +115,10 @@ class Pages extends React.Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {users.items.map((userS) =>
-                                                    <tr key={userS.id}>
-                                                        <th scope="row">{userS.id} </th>
-                                                        <td>{userS.firstName}</td>
+                                                {projects.items.map((projectS) =>
+                                                    <tr key={projectS.id}>
+                                                        <th scope="row">{projectS.id} </th>
+                                                        <td>{projectS.name}</td>
                                                     </tr>
                                                 )}
                                             </tbody>
@@ -164,174 +165,17 @@ class Pages extends React.Component {
 }
 
 function mapState(state) {
-    const { users, authentication } = state;
+    const { users, authentication, projects } = state;
     const { user } = authentication;
-    return { user, users };
+    return { user, users, projects };
 }
 
 const actions = {
     getUsers: userActions.getAll,
-    deleteUser: userActions.delete
+    deleteUser: userActions.delete,
+    getProjects: projectActions.getAll,
+    deleteProjects: projectActions.delete
 }
 
 const connectedPage = connect(mapState, actions)(Pages);
 export { connectedPage as Pages }
-
-
-
-// //--------------------------------------------------------fara MODAL
-
-// import React from "react";
-// import { connect } from 'react-redux';
-// import { userActions } from "../_actions";
-
-// class Pages extends React.Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = { id: 0 }
-
-//     }
-
-//     componentDidMount() {
-//         this.props.getUsers();
-//     }
-
-//     handleDeleteUser(id) {
-//         return () => this.props.deleteUser(id);
-//     }
-
-//     render() {
-//         const { users, user, page } = this.props;
-//         return (
-//             <div>
-//                 {page === "profile" &&
-//                     <div className="container-fluid">
-//                         <ol className="breadcrumb">
-//                             <li className="breadcrumb-item">
-//                                 <a href="/users">Dashboard</a>
-//                             </li>
-//                             <li className="breadcrumb-item active">Profile</li>
-//                         </ol>
-
-//                         <h1>Hi {user.firstName}!</h1>
-//                         <hr />
-//                     </div>
-//                 }
-//                 {page === "users" &&
-//                     <div className="container-fluid">
-//                         <ol className="breadcrumb">
-//                             <li className="breadcrumb-item">
-//                                 <a href="/users">Dashboard</a>
-//                             </li>
-//                             <li className="breadcrumb-item active">Users</li>
-//                         </ol>
-//                         {users.loading && <em>Loading users...</em>}
-//                         {users.error && <span className="text-danger">ERROR: {users.error}</span>}
-//                         {users.items &&
-//                             <div className="card">
-//                                 <div className="card-header">
-//                                     <i className="fa fa-table"></i> Users
-//                                 </div>
-//                                 <div className="card-body">
-//                                     <div className="table-responsive">
-//                                         <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
-//                                             <thead className="thead-dark">
-//                                                 <tr>
-//                                                     <th scope="col">ID</th>
-//                                                     <th scope="col">First name</th>
-//                                                     <th scope="col">Last name</th>
-//                                                     <th scope="col">Delete</th>
-//                                                 </tr>
-//                                             </thead>
-//                                             <tbody>
-//                                                 {users.items.map((userS) =>
-//                                                     <tr key={userS.id}>
-//                                                         <th scope="row">{userS.id} </th>
-//                                                         <td>{userS.firstName}</td>
-//                                                         <td>{userS.lastName}</td>
-//                                                         <td>
-//                                                             {
-//                                                                 userS.deleting ? <em> Deleting...</em>
-//                                                                     : userS.deleteError ? <span className="text-danger"> - ERROR: {userS.deleteError}</span>
-//                                                                         : user.id !== userS.id && <a href="#d" onClick={this.handleDeleteUser(userS.id)}>Delete</a>
-//                                                             }
-//                                                         </td>
-//                                                     </tr>
-//                                                 )}
-//                                             </tbody>
-//                                         </table>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                         }
-//                     </div>
-//                 }
-//                 {page === "projects" &&
-//                     <div className="container-fluid">
-//                         <ol className="breadcrumb">
-//                             <li className="breadcrumb-item">
-//                                 <a href="/users">Dashboard</a>
-//                             </li>
-//                             <li className="breadcrumb-item active">Projects</li>
-//                         </ol>
-
-//                         {/* {projects.loading && <em>Loading projects...</em>} */}
-//                         {users.error && <span className="text-danger">ERROR: {users.error}</span>}
-//                         {users.items &&
-//                             <div className="card">
-//                                 <div className="card-header">
-//                                     <i className="fa fa-table"></i> Projects</div>
-//                                 <div className="card-body">
-//                                     <div className="table-responsive">
-//                                         <table className="table table-bordered" id="dataTable" width="100%" cellSpacing="0">
-//                                             <thead className="thead-dark">
-//                                                 <tr>
-//                                                     <th scope="col">ID</th>
-//                                                     <th scope="col">Project Name</th>
-//                                                 </tr>
-//                                             </thead>
-//                                             <tbody>
-//                                                 {users.items.map((userS) =>
-//                                                     <tr key={userS.id}>
-//                                                         <th scope="row">{userS.id} </th>
-//                                                         <td>{userS.firstName}</td>
-//                                                     </tr>
-//                                                 )}
-//                                             </tbody>
-//                                         </table>
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                         }
-//                     </div>
-//                 }
-//                 {page === "charts" &&
-//                     <div className="container-fluid">
-//                         <ol className="breadcrumb">
-//                             <li className="breadcrumb-item">
-//                                 <a href="/users">Dashboard</a>
-//                             </li>
-//                             <li className="breadcrumb-item active">Charts</li>
-//                         </ol>
-
-//                     </div>
-//                 }
-//                 {localStorage.setItem('page', page)}
-//             </div>
-//         );
-//     }
-// }
-
-// function mapState(state) {
-//     const { users, authentication } = state;
-//     const { user } = authentication;
-//     return { user, users };
-// }
-
-// const actions = {
-//     getUsers: userActions.getAll,
-//     deleteUser: userActions.delete
-// }
-
-// const connectedPage = connect(mapState, actions)(Pages);
-// export { connectedPage as Pages }

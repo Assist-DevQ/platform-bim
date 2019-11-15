@@ -7,9 +7,11 @@ let users = JSON.parse(localStorage.getItem('users')) || []
 //console.log(users);
 
 export function configureFakeBackend() {
-    let realFetch = window.fetch;
+
+    //let realFetch = window.fetch;
     window.fetch = function (url, opts) {
         return new Promise((resolve, reject) => {
+            
             // wrap in timeout to simulate server api call
             setTimeout(() => {
 
@@ -42,6 +44,8 @@ export function configureFakeBackend() {
 
                     return;
                 }
+
+
 
                 // get users
                 if (url.endsWith('/users') && opts.method === 'GET') {
@@ -126,10 +130,10 @@ export function configureFakeBackend() {
                     return;
                 }
 
-                // pass through any requests not handled above
-                realFetch(url, opts).then(response => resolve(response));
+                // // pass through any requests not handled above
+                // realFetch(url, opts).then(response => resolve(response));
 
             }, 500);
-        });
+        });     
     }
 }

@@ -1,58 +1,90 @@
 export const projectService = {
-    getAll,
-    getById,
-    update,
-    delete: _delete
+  getAll,
+  getById,
+  update,
+  delete: _delete
 };
 
-function getAll() {
-    const requestOptions = {
-        method: 'GET',
-    };
+let url = 'https://001a2ca2.ngrok.io/admin/api/v1/projects';
 
-    return fetch(`/projects`, requestOptions).then(handleResponse);
+var setHeader = new Headers({
+  'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
+  'Content-Type': 'application/json'
+})
+
+async function getAll() {
+  try {
+    let response = fetch(url, { headers: setHeader })
+      .then(r => r.json())
+      .then(c => console.log(c))
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
 }
+
+// async function getData(url){
+//   console.log("inceput getData");
+//     let response = await fetch(url, {
+//         method: 'GET',
+//         headers: hh,
+//         credentials: 'include',
+//       }).then(response => response.json())
+//       .then(json => console.log(json))
+//       console.log(response);
+//       return response;
+//       // return await response.json();
+// }
+
+// async function getData(url){
+//   console.log("inceput getData");
+//   // let response = await fetch(url);
+//    let response = fetch(url,{headers: hh})
+//   .then(response => response.json())
+//   .then(json => console.log(json))
+//   // .then(response => response.json())
+//   // .then(json => console.log(json))
+
+
+//   //   const response = await fetch(url);
+// // const myJson = await response.json();
+// // console.log(JSON.stringify(myJson));
+//   // console.log("SALUT");
+//   // console.log(response);
+//   // console.log("PA");
+//     // let response = await fetch(url, {
+//     //     method: 'GET',
+//     //     headers: { 'Content-Type': 'application/json' },
+//     //     credentials: 'include',
+//     //   });
+//       // response = JSON.parse(response);
+//       console.log(response);
+//       return response;
+//       // return await response.json();
+// }
 
 function getById(id) {
-    const requestOptions = {
-        method: 'GET',
-    };
 
-    return fetch(`/projects/${id}`, requestOptions).then(handleResponse);
 }
+
+// async function getDataById(url = '', id) {
+
+// }
 
 function update(project) {
-    const requestOptions = {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(project)
-    };
 
-    return fetch(`/projects/${project.id}`, requestOptions).then(handleResponse);;
 }
+
+// async function updateData(url = '', project) {
+
+// }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {
-    const requestOptions = {
-        method: 'DELETE',
-    };
 
-    return fetch(`/projects/${id}`, requestOptions).then(handleResponse);
 }
 
-function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            if (response.status === 401) {
-                //if 401 response returned from api
-                window.location.reload(true);
-            }
+// async function deleteData(url = '', id) {
 
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
-
-        return data;
-    });
-}
+// }

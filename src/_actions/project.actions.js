@@ -1,7 +1,7 @@
 import { projectConstants } from '../_constants';
 import { projectService } from '../_services';
 
-export const userActions = {
+export const projectActions = {
     getAll,
     delete: _delete
 };

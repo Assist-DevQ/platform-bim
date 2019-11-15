@@ -27,7 +27,7 @@ export function projects(state = {}, action) {
     case projectConstants.DELETE_SUCCESS:
       // remove deleted project from state
       return {
-        items: state.items.filter(project => project.id !== action.id)
+        items: state.items.filter(project => project.id !== Number(action.id))
       };
     case projectConstants.DELETE_FAILURE:
       // remove 'deleting:true' property and add 'deleteError:[error]' property to project
@@ -37,7 +37,7 @@ export function projects(state = {}, action) {
           if (project.id === action.id) {
             // make copy of project without 'deleting:true' property
             const { deleting, ...projectCopy } = project;
-            // return copy of user with 'deleteError:[error]' property
+            // return copy of project with 'deleteError:[error]' property
             return { ...projectCopy, deleteError: action.error };
           }
 
