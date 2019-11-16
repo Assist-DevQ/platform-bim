@@ -7,11 +7,9 @@ let users = JSON.parse(localStorage.getItem('users')) || []
 //console.log(users);
 
 export function configureFakeBackend() {
-
-    //let realFetch = window.fetch;
+    let realFetch = window.fetch;
     window.fetch = function (url, opts) {
         return new Promise((resolve, reject) => {
-            
             // wrap in timeout to simulate server api call
             setTimeout(() => {
 
@@ -41,7 +39,6 @@ export function configureFakeBackend() {
                         // else return error
                         reject('Username or password is incorrect');
                     }
-
                     return;
                 }
 
@@ -51,7 +48,7 @@ export function configureFakeBackend() {
                 if (url.endsWith('/users') && opts.method === 'GET') {
                     // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
                     if (opts.headers && opts.headers.Authorization === 'Bearer fake-jwt-token') {
-                        resolve({ ok: true, text: () => Promise.resolve(JSON.stringify(users))});
+                        resolve({ ok: true, text: () => Promise.resolve(JSON.stringify(users)) });
                     } else {
                         // return 401 not authorised if token is null or invalid
                         reject('Unauthorised');
@@ -71,7 +68,7 @@ export function configureFakeBackend() {
                         let user = matchedUsers.length ? matchedUsers[0] : null;
 
                         // respond 200 OK with user
-                        resolve({ ok: true, text: () => JSON.stringify(user)});
+                        resolve({ ok: true, text: () => JSON.stringify(user) });
                     } else {
                         // return 401 not authorised if token is null or invalid
                         reject('Unauthorised');
@@ -131,9 +128,9 @@ export function configureFakeBackend() {
                 }
 
                 // // pass through any requests not handled above
-                // realFetch(url, opts).then(response => resolve(response));
+                realFetch(url, opts).then(response => resolve(response));
 
-            }, 500);
-        });     
+            },500);
+        });
     }
 }
