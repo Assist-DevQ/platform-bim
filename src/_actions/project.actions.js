@@ -13,8 +13,9 @@ function add(project) {
         dispatch(request(project));
         projectService.add(project)
             .then(
-                proj => {
-                    dispatch(success(project));
+                resp => {
+                    dispatch(success(resp.project));
+                    console.log(resp)
                     //dispatch(alertActions.success('Add project successful'));
                 },
                 error => {
