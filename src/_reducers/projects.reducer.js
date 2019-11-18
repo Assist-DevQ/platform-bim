@@ -9,9 +9,9 @@ export function projects(state = {}, action) {
     case projectConstants.GETALL_SUCCESS:
       return {
         items: action.projects
-      };
+      }
     case projectConstants.GETALL_FAILURE:
-      return { 
+      return {
         error: action.error
       };
     case projectConstants.DELETE_REQUEST:
@@ -19,7 +19,7 @@ export function projects(state = {}, action) {
       return {
         ...state,
         items: state.items.map(project =>
-            project.id === action.id
+          project.id === action.id
             ? { ...project, deleting: true }
             : project
         )
@@ -44,6 +44,48 @@ export function projects(state = {}, action) {
           return project;
         })
       };
+    //update
+    case projectConstants.UPDATE_REQUEST:
+      return {
+        ...state,
+        items: state.items.map(project =>
+          project.id === action.project.id
+            ? { ...project, updating: true }
+            : project
+        )
+      };
+    case projectConstants.UPDATE_SUCCESS:
+      action.project.id = Number(action.project.id);
+      return {
+        ...state,
+        items: state.items.map(project => {
+          if (project.id === action.project.id) {
+            return action.project;
+          }
+          return project;
+        })
+      };
+    case projectConstants.UPDATE_FAILURE:
+      return {
+        ...state,
+        items: state.items.map(project => {
+          if (project.id === action.project.id) {
+            return { updateError: action.error };
+          }
+          return project;
+        })
+      };
+    //add
+    case projectConstants.ADD_REQUEST:
+      return { adding: true };
+    case projectConstants.ADD_SUCCESS:
+      action.project.id = Number(action.project.id);
+      return {
+        ...state,
+        items: [...state.items, action.project]
+      };
+    case projectConstants.ADD_FAILURE:
+      return {};
     default:
       return state
   }

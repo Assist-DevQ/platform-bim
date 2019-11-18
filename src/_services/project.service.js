@@ -1,6 +1,7 @@
 export const projectService = {
   getAll,
   getById,
+  add,
   update,
   delete: _delete
 };
@@ -24,27 +25,63 @@ async function getAll() {
   }
 }
 
-function getById(id) {
-
+async function getById(id) {
+  try {
+    return await fetch(url + '/' + id, {
+      method: 'GET',
+      headers: setHeader,
+    }).then(response => response.json())
+      .then(r => r.projects)
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-// async function getDataById(url = '', id) {
-
-// }
-
-function update(project) {
-
+async function update(proj) {
+  try {
+    return await fetch(url + '/' + proj.id, {
+      method: 'PUT',
+      headers: setHeader,
+      body: JSON.stringify({
+        project: {
+          name: proj.name,
+          repository_link: proj.repository_link,
+          production_url: proj.production_url
+        }
+      })
+    }).then(response => response.json())
+    .then(r => r.projects)
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-// async function updateData(url = '', project) {
-
-// }
+async function add(proj) {
+  try {
+    return await fetch(url, {
+      method: 'POST',
+      headers: setHeader,
+      body: JSON.stringify({
+        project: {
+          name: proj.name,
+          repository_link: proj.repository_link,
+          production_url: proj.production_url
+        }
+      })
+    })
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 // prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
-
+async function _delete(id) {
+  try {
+    return await fetch(url + '/' + id, {
+      method: 'DELETE',
+      headers: setHeader,
+    })
+  } catch (error) {
+    console.error(error);
+  }
 }
-
-// async function deleteData(url = '', id) {
-
-// }

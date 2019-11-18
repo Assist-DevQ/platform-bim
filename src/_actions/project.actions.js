@@ -2,9 +2,54 @@ import { projectConstants } from '../_constants';
 import { projectService } from '../_services';
 
 export const projectActions = {
+    update,
+    add,
     getAll,
     delete: _delete
 };
+
+function add(project) {
+    return dispatch => {
+        dispatch(request(project));
+        projectService.add(project)
+            .then(
+                proj => {
+                    dispatch(success(project));
+                    //dispatch(alertActions.success('Add project successful'));
+                },
+                error => {
+                    dispatch(failure(error));
+                    //dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request(project) { return { type: projectConstants.ADD_REQUEST, project } }
+    function success(project) { return { type: projectConstants.ADD_SUCCESS, project } }
+    function failure(error) { return { type: projectConstants.ADD_FAILURE, error } }
+}
+
+function update(project) {
+    return dispatch => {
+        dispatch(request(project));
+
+        projectService.update(project)
+            .then(
+                proj => {
+                    dispatch(success(project));
+                    //dispatch(alertActions.success('Update project successful'));
+                },
+                error => {
+                    dispatch(failure(error));
+                    //dispatch(alertActions.error(error));
+                }
+            );
+    };
+
+    function request(project) { return { type: projectConstants.UPDATE_REQUEST, project } }
+    function success(project) { return { type: projectConstants.UPDATE_SUCCESS, project } }
+    function failure(error) { return { type: projectConstants.UPDATE_FAILURE, error } }
+}
 
 function getAll() {
     return dispatch => {
@@ -29,7 +74,7 @@ function _delete(id) {
 
         projectService.delete(id)
             .then(
-                project => { 
+                project => {
                     dispatch(success(id));
                 },
                 error => {
