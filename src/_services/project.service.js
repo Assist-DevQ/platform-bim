@@ -68,7 +68,7 @@ async function add(proj) {
           production_url: proj.production_url
         }
       })
-    })
+    }).then(res => res.json())
   } catch (error) {
     console.error(error);
   }
