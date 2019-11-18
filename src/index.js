@@ -6,7 +6,6 @@ import { store } from './_helpers';
 import { App } from './App';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import './assets/css/index.css';
 
 // setup fake backend

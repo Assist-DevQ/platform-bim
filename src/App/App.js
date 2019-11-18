@@ -23,9 +23,7 @@ class App extends React.Component {
         const { alert } = this.props;
         return (
             <BrowserRouter>
-            <div className="jumbotron">
-                <div className="container">
-                    <div className="col-sm-8 col-sm-offset-2">
+                <div className="container-fluid">
                         <br/>
                         <br/>
                         <br/>
@@ -42,8 +40,6 @@ class App extends React.Component {
                             </Switch>
                         </Router>
                     </div>
-                </div>
-            </div>
             </BrowserRouter>
         );
     }
