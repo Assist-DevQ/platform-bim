@@ -4,7 +4,12 @@ import { Pages } from './Pages';
 class DashboardAdmin extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { addClass: false, page: localStorage.getItem('page')}
+        this.state = { addClass: false, page: localStorage.getItem('page') }
+
+        window.history.pushState(null, null, window.location.href);
+        window.onpopstate = function () {
+            window.history.go(1);
+        };
 
         this.toggle = this.toggle.bind(this);
     }
@@ -14,13 +19,11 @@ class DashboardAdmin extends React.Component {
     render() {
         let sidebarClass = [""];
         let sidebarToggled = [""];
-        if (!this.state.addClass)
-        {
+        if (!this.state.addClass) {
             sidebarClass.push('sidebar navbar-nav fixed-top toggled');
             sidebarToggled.push('dash wrapper');
         }
-        else
-        {
+        else {
             sidebarClass.push('sidebar navbar-nav fixed-top');
             sidebarToggled.push('dash wrapper sideToggled');
         }
@@ -44,7 +47,7 @@ class DashboardAdmin extends React.Component {
                                 <i className="fa fa-user-circle fa-lg"></i>
                             </a>
                             <div className="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-                                <a className="dropdown-item" href="#profile" onClick={() => { this.setState({ page: "profile" }) }}>Profile</a>
+                                <a className="dropdown-item" href="#profile" onClick={() => { this.setState({ page: "profile" }); }}>Profile</a>
                                 <hr />
                                 <a className="dropdown-item" href="#logout" data-toggle="modal" data-target="#logoutModal">Logout</a>
                             </div>
@@ -88,7 +91,7 @@ class DashboardAdmin extends React.Component {
                             <div className="modal-body">Are you sure you want to logout?</div>
                             <div className="modal-footer">
                                 <button className="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                <a className="btn btn-primary" href="/login">Yes</a>
+                                <a className="btn btn-primary text-white" href="/login">Yes</a>
                             </div>
                         </div>
                     </div>

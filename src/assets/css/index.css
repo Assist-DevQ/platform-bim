@@ -33,6 +33,10 @@ font-size: 2vw; /* 3% of the viewport width */
   max-width: 40rem;
 }
 
+.card-sc{
+  max-width: 18rem;
+}
+
 a:link, a:visited {
 color: #0000FF;
 }
@@ -51,7 +55,7 @@ box-sizing: border-box;
 .btn {
 display: inline-block;
 font-weight: 400;
-color: #212529;
+color:white;
 text-align: center;
 vertical-align: middle;
 -webkit-user-select: none;
@@ -490,4 +494,58 @@ color: #ffe000;
   .btndis{
     visibility: visible;
   }
+}
+.boxmodal{
+  display: grid;  
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px 2em;
+}
+.boxmodal :first-child {
+  align-self: center;
+}
+.imgmodal{
+  width: 100%;
+}
+.modal-full {
+  min-width: 100%;
+  margin: 0;
+}
+.modal-full .modal-content {
+  min-height: 100vh;
+}
+.box{
+  display: grid;  
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px 2em;
+}
+.box :first-child {
+  align-self: center;
+}
+@supports (display: grid) {
+  @media screen and (max-width: 1500px) {
+  .box {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+}
+@supports (display: grid) {
+  @media screen and (max-width: 1200px) {
+  .box {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+}
+@supports (display: grid) {
+  @media screen and (max-width: 900px) {
+  .box {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+}
+@supports (display: grid) {
+  @media screen and (max-width: 650px) {
+  .box {
+    grid-template-columns: 1fr;
+  }
+}
 }

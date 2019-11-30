@@ -5,11 +5,13 @@ import { registration } from './registration.reducer';
 import { projects } from './projects.reducer';
 import { users } from './users.reducer';
 import { alert } from './alert.reducer';
+import { scenarios } from './scenarios.reducer';
 
 const rootReducer = combineReducers({
   authentication,
   registration,
   projects,
+  scenarios,
   users,
   alert
 });

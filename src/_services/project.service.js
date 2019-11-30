@@ -6,7 +6,8 @@ export const projectService = {
   delete: _delete
 };
 
-let url = 'https://001a2ca2.ngrok.io/admin/api/v1/projects';
+//https://f8867ec3.ngrok.io/docs/admin
+let url = 'http://f8867ec3.ngrok.io/admin/api/v1/projects';
 
 var setHeader = new Headers({
   'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
@@ -50,7 +51,7 @@ async function update(proj) {
         }
       })
     }).then(response => response.json())
-    .then(r => r.projects)
+      .then(r => r.projects)
   } catch (error) {
     console.error(error);
   }
@@ -68,7 +69,7 @@ async function add(proj) {
           production_url: proj.production_url
         }
       })
-    })
+    }).then(res => res.json())
   } catch (error) {
     console.error(error);
   }

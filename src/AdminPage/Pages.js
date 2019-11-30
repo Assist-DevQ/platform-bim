@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { userActions, projectActions } from "../_actions";
+import { userActions, projectActions, scenarioActions } from "../_actions";
+import image_card from '../assets/img/img_index.jpg';
+//import image_modal from '../assets/img/imag1.jpg';
 
 class Pages extends React.Component {
     constructor(props) {
@@ -12,16 +14,33 @@ class Pages extends React.Component {
                 repository_link: '',
                 production_url: '',
             },
+            scenario: {
+                id: '',
+                name: '',
+            },
             id: 0,
             submitted: false,
+            sc: false,
+            images:[],
+            diffImages:[],
         }
 
         this.setId = this.setId.bind(this);
         this.setIdUpdate = this.setIdUpdate.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeScenario = this.handleChangeScenario.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSubmitUpdate = this.handleSubmitUpdate.bind(this);
+        this.handleSubmitScenario = this.handleSubmitScenario.bind(this);
         this.resetModal = this.resetModal.bind(this);
+        this.resetModalScenario = this.resetModalScenario.bind(this);
+    }
+
+    getImages(){
+        this.setState({
+            images: ["https://techcrunch.com/wp-content/uploads/2017/01/messaging-apps.jpg?w=730&crop=1", "https://techcrunch.com/wp-content/uploads/2017/01/messaging-apps.jpg?w=730&crop=1"],
+            diffImages: ["https://cnet2.cbsistatic.com/img/Ci83PgMALhPKBqjzqTYdOr4voz0=/1092x0/2019/06/20/c2637498-b494-4916-bcf8-a3e1b7d96790/apple-ios-apps.jpg", "https://cnet2.cbsistatic.com/img/Ci83PgMALhPKBqjzqTYdOr4voz0=/1092x0/2019/06/20/c2637498-b494-4916-bcf8-a3e1b7d96790/apple-ios-apps.jpg"]
+        })
     }
 
     handleChange(event) {
@@ -34,10 +53,27 @@ class Pages extends React.Component {
             }
         });
     }
-      
+
+    handleChangeScenario(event) {
+        const { name, value } = event.target;
+        const { scenario } = this.state;
+        this.setState({
+            scenario: {
+                ...scenario,
+                [name]: value
+            }
+        });
+    }
+
     componentDidMount() {
         this.props.getUsers();
         this.props.getProjects();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.page !== prevProps.page) {
+            this.setState({ sc: false })
+        }
     }
 
     handleDeleteUser(id) {
@@ -57,6 +93,15 @@ class Pages extends React.Component {
         }
     }
 
+    handleSubmitScenario(event) {
+        event.preventDefault();
+        this.setState({ submitted: true });
+        const { scenario } = this.state;
+        if (scenario.name) {
+            this.props.addScenario(scenario, this.state.project.id);
+        }
+    }
+
     handleSubmitUpdate(event) {
         event.preventDefault();
         this.setState({ submitted: true });
@@ -73,6 +118,13 @@ class Pages extends React.Component {
         });
     }
 
+    resetModalScenario() {
+        this.setState({
+            scenario: { name: '' },
+            submitted: false
+        });
+    }
+
     setId(e) {
         const { id } = e.target;
         this.setState({ id: id });
@@ -82,20 +134,22 @@ class Pages extends React.Component {
         this.resetModal();
         const { id, name } = e.target;
         const v = name.split(' ');
-        this.setState({ id: id, 
-            project:{id: id, name: v[0], repository_link: v[1], production_url: v[2] }});
+        this.setState({
+            id: id,
+            project: { id: id, name: v[0], repository_link: v[1], production_url: v[2] }
+        });
     }
 
     render() {
-        const { projects, users, user, page } = this.props;
-        const { project, submitted } = this.state;
+        const { projects, scenarios, users, user, page } = this.props;
+        const { project, scenario, submitted, sc } = this.state;
         return (
             <div>
                 {page === "profile" &&
                     <div className="container-fluid">
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item">
-                                <a href="/users">Dashboard</a>
+                                <div>Dashboard</div>
                             </li>
                             <li className="breadcrumb-item active">Profile</li>
                         </ol>
@@ -108,7 +162,7 @@ class Pages extends React.Component {
                     <div className="container-fluid">
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item">
-                                <a href="/users">Dashboard</a>
+                                <div>Dashboard</div>
                             </li>
                             <li className="breadcrumb-item active">Users</li>
                         </ol>
@@ -153,11 +207,11 @@ class Pages extends React.Component {
                         }
                     </div>
                 }
-                {page === "projects" &&
+                {page === "projects" && !sc &&
                     <div className="container-fluid">
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item">
-                                <a href="/users">Dashboard</a>
+                                <div>Dashboard</div>
                             </li>
                             <li className="breadcrumb-item active">Projects</li>
                         </ol>
@@ -180,6 +234,7 @@ class Pages extends React.Component {
                                                     <th scope="col">Production URL</th>
                                                     <th scope="col">Delete</th>
                                                     <th scope="col">Edit</th>
+                                                    <th scope="col">Scenarios</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -204,6 +259,9 @@ class Pages extends React.Component {
                                                                             onClick={this.setIdUpdate} href="#update" data-toggle="modal" data-target="#updateProjModal">Update</a>
                                                             }
                                                         </td>
+                                                        <td>
+                                                            <a href="#projects" onClick={() => { this.setState({ sc: true, project: { name: projectS.name, id: projectS.id, repository_link: project.repository_link, production_url: project.production_url } }); this.props.getScenarios(projectS.id) }}>Open scenarios</a>
+                                                        </td>
                                                     </tr>
                                                 )}
                                             </tbody>
@@ -214,11 +272,57 @@ class Pages extends React.Component {
                         }
                     </div>
                 }
+                {page === "projects" && sc &&
+                    <div className="container-fluid">
+                        <ol className="breadcrumb">
+                            <li className="breadcrumb-item">
+                                <div>Dashboard</div>
+                            </li>
+                            <li className="breadcrumb-item">
+                                <a href="#projects" onClick={() => this.setState({ sc: false })}>Projects</a>
+                            </li>
+                            <li className="breadcrumb-item active">Scenarios</li>
+                        </ol>
+
+                        <div className="card">
+                            <div className="card-header">
+                                <i className="fa fa-table"></i> Scenarios
+                                    <a className="float-right" href="#add" data-toggle="modal" data-target="#addModalScenario" onClick={this.resetModalScenario}>Add new scenario</a>
+                            </div>
+                            <div className="card-header text-center text-white bg-dark">
+                                <div><b>ID: {project.id} - Name Project: {project.name}</b></div>
+                            </div>
+                            {scenarios.loading && <em>Loading scenarios...</em>}
+                            {scenarios.error && <span className="text-danger">ERROR: {scenarios.error}</span>}
+                            {scenarios.items &&
+                                <div className="card-body box">
+                                    {scenarios.items.map((scenarioS) =>
+                                        <div key={scenarioS.id} className="card-group">
+                                            <div className="card card-sc">
+                                                <img className="card-img-top" src={image_card} alt='' height='200' />
+                                                <div className="card-body">
+                                                    <h5 className="card-title">{scenarioS.name}</h5>
+                                                    <div className="input-group">
+                                                        <select className="form-control">
+                                                            <option>Master</option>
+                                                        </select>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                        <button className="btn btn-dark text-white" href="#open" data-toggle="modal" data-target="#openScenario" onClick={() => {this.getImages(); this.setState({ scenario: { id: scenarioS.id, name: scenarioS.name } })}}>Open</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
                 {page === "charts" &&
                     <div className="container-fluid">
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item">
-                                <a href="/users">Dashboard</a>
+                                <div>Dashboard</div>
                             </li>
                             <li className="breadcrumb-item active">Charts</li>
                         </ol>
@@ -338,6 +442,51 @@ class Pages extends React.Component {
                         </div>
                     </div>
                 </div>
+                <div className="modal fade" id="addModalScenario" tabIndex="-1" role="dialog" aria-hidden="true">
+                    <div className="modal-dialog" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Add scenario</h5>
+                                <button className="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div className="modal-body">
+                                <div className={'form-group' + (submitted && !scenario.name ? ' has-error' : '')}>
+                                    <label htmlFor="name">Name</label>
+                                    <input type="text" className="form-control" name="name" value={scenario.name} onChange={this.handleChangeScenario} />
+                                    {submitted && !scenario.name &&
+                                        <div className="help-block">Name is required</div>
+                                    }
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button className="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                <button className="btn btn-primary" data-dismiss={scenario.name ? "modal" : ""} onClick={this.handleSubmitScenario}>Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="modal fade mymodal" id="openScenario" tabIndex="-1" role="dialog" aria-hidden="true">
+                    <div className="modal-dialog modal-full" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Project name: {project.name}<br />Scenario name: {scenario.name}</h5>
+                                <button className="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            {
+                                this.state.images.map((source, index) =>
+                                    <div key={index} className="modal-body boxmodal">
+                                        <div><h5>Original Image</h5><img src={source} className="imgmodal" alt="" /></div>
+                                        <div><h5>Diff Image</h5><img src={this.state.diffImages[index]} className="imgmodal" alt="" /></div>
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </div>
+                </div>
                 {localStorage.setItem('page', page)}
             </div>
         );
@@ -345,9 +494,9 @@ class Pages extends React.Component {
 }
 
 function mapState(state) {
-    const { users, authentication, projects } = state;
+    const { users, authentication, projects, scenarios } = state;
     const { user } = authentication;
-    return { user, users, projects };
+    return { user, users, projects, scenarios };
 }
 
 const actions = {
@@ -357,6 +506,8 @@ const actions = {
     deleteProject: projectActions.delete,
     addProject: projectActions.add,
     updateProject: projectActions.update,
+    getScenarios: scenarioActions.getAll,
+    addScenario: scenarioActions.add,
 }
 
 const connectedPage = connect(mapState, actions)(Pages);

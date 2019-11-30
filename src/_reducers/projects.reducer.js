@@ -77,7 +77,7 @@ export function projects(state = {}, action) {
       };
     //add
     case projectConstants.ADD_REQUEST:
-      return { adding: true };
+      return { ...state, adding: true };
     case projectConstants.ADD_SUCCESS:
       action.project.id = Number(action.project.id);
       return {
