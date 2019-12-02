@@ -1,0 +1,1 @@
+export const baseUrl = 'http://e99b0382.ngrok.io/admin/api/v1';

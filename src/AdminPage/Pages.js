@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { userActions, projectActions, scenarioActions } from "../_actions";
+import { userActions, projectActions, projectIdActions, scenarioActions } from "../_actions";
 import image_card from '../assets/img/img_index.jpg';
 //import image_modal from '../assets/img/imag1.jpg';
 
@@ -21,8 +21,9 @@ class Pages extends React.Component {
             id: 0,
             submitted: false,
             sc: false,
-            images:[],
-            diffImages:[],
+            images: [],
+            diffImages: [],
+            flag: false
         }
 
         this.setId = this.setId.bind(this);
@@ -36,7 +37,7 @@ class Pages extends React.Component {
         this.resetModalScenario = this.resetModalScenario.bind(this);
     }
 
-    getImages(){
+    getImages() {
         this.setState({
             images: ["https://techcrunch.com/wp-content/uploads/2017/01/messaging-apps.jpg?w=730&crop=1", "https://techcrunch.com/wp-content/uploads/2017/01/messaging-apps.jpg?w=730&crop=1"],
             diffImages: ["https://cnet2.cbsistatic.com/img/Ci83PgMALhPKBqjzqTYdOr4voz0=/1092x0/2019/06/20/c2637498-b494-4916-bcf8-a3e1b7d96790/apple-ios-apps.jpg", "https://cnet2.cbsistatic.com/img/Ci83PgMALhPKBqjzqTYdOr4voz0=/1092x0/2019/06/20/c2637498-b494-4916-bcf8-a3e1b7d96790/apple-ios-apps.jpg"]
@@ -260,7 +261,7 @@ class Pages extends React.Component {
                                                             }
                                                         </td>
                                                         <td>
-                                                            <a href="#projects" onClick={() => { this.setState({ sc: true, project: { name: projectS.name, id: projectS.id, repository_link: project.repository_link, production_url: project.production_url } }); this.props.getScenarios(projectS.id) }}>Open scenarios</a>
+                                                            <a href="#projects" onClick={() => { this.setState({ sc: true, project: { name: projectS.name, id: projectS.id, repository_link: project.repository_link, production_url: project.production_url } }); this.props.getScenarios(projectS.id); this.props.getProjectById(projectS.id); }}>Open scenarios</a>
                                                         </td>
                                                     </tr>
                                                 )}
@@ -283,7 +284,6 @@ class Pages extends React.Component {
                             </li>
                             <li className="breadcrumb-item active">Scenarios</li>
                         </ol>
-
                         <div className="card">
                             <div className="card-header">
                                 <i className="fa fa-table"></i> Scenarios
@@ -303,11 +303,13 @@ class Pages extends React.Component {
                                                 <div className="card-body">
                                                     <h5 className="card-title">{scenarioS.name}</h5>
                                                     <div className="input-group">
-                                                        <select className="form-control">
-                                                            <option>Master</option>
-                                                        </select>
+                                                        {this.props.project.branches && this.props.project.branches.map(branch =>
+                                                            <select key={branch.id} className="form-control">
+                                                                <option>{branch.name}</option>
+                                                            </select>
+                                                        )}
                                                         &nbsp;&nbsp;&nbsp;
-                                                        <button className="btn btn-dark text-white" href="#open" data-toggle="modal" data-target="#openScenario" onClick={() => {this.getImages(); this.setState({ scenario: { id: scenarioS.id, name: scenarioS.name } })}}>Open</button>
+                                                        <button className="btn btn-dark text-white" href="#open" data-toggle="modal" data-target="#openScenario" onClick={() => { this.getImages(); this.setState({ scenario: { id: scenarioS.id, name: scenarioS.name } }) }}>Open</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -480,7 +482,10 @@ class Pages extends React.Component {
                                 this.state.images.map((source, index) =>
                                     <div key={index} className="modal-body boxmodal">
                                         <div><h5>Original Image</h5><img src={source} className="imgmodal" alt="" /></div>
-                                        <div><h5>Diff Image</h5><img src={this.state.diffImages[index]} className="imgmodal" alt="" /></div>
+                                        {this.state.flag ?
+                                            <div><h5>Diff Image</h5><img src={this.state.diffImages[index]} className="imgmodal borderGreen" alt="" /></div> :
+                                            <div><h5>Diff Image</h5><img src={this.state.diffImages[index]} className="imgmodal borderRed" alt="" /></div>
+                                        }
                                     </div>
                                 )
                             }
@@ -494,15 +499,16 @@ class Pages extends React.Component {
 }
 
 function mapState(state) {
-    const { users, authentication, projects, scenarios } = state;
+    const { users, authentication, projects, project, scenarios } = state;
     const { user } = authentication;
-    return { user, users, projects, scenarios };
+    return { user, users, projects, project, scenarios };
 }
 
 const actions = {
     getUsers: userActions.getAll,
     deleteUser: userActions.delete,
     getProjects: projectActions.getAll,
+    getProjectById: projectIdActions.getById,
     deleteProject: projectActions.delete,
     addProject: projectActions.add,
     updateProject: projectActions.update,

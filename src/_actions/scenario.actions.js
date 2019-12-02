@@ -36,7 +36,7 @@ function add(scenario, proj_id) {
             );
     };
 
-    function request(scenario) { return { type: scenarioConstants.ADD_REQUEST, scenario } }
+    function request() { return { type: scenarioConstants.ADD_REQUEST } }
     function success(scenario) { return { type: scenarioConstants.ADD_SUCCESS, scenario } }
     function failure(error) { return { type: scenarioConstants.ADD_FAILURE, error } }
 }

@@ -549,3 +549,9 @@ color: #ffe000;
   }
 }
 }
+.borderGreen{
+  border:10px solid green;
+}
+.borderRed{
+  border:10px solid red;
+}

@@ -1,13 +1,14 @@
+import { baseUrl } from "../_helpers";
+
 export const projectService = {
   getAll,
-  getById,
   add,
   update,
   delete: _delete
 };
 
-//https://f8867ec3.ngrok.io/docs/admin
-let url = 'http://f8867ec3.ngrok.io/admin/api/v1/projects';
+//http://e99b0382.ngrok.io/docs/admin
+let url = baseUrl + '/projects';
 
 var setHeader = new Headers({
   'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
@@ -17,18 +18,6 @@ var setHeader = new Headers({
 async function getAll() {
   try {
     return await fetch(url, {
-      method: 'GET',
-      headers: setHeader,
-    }).then(response => response.json())
-      .then(r => r.projects)
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function getById(id) {
-  try {
-    return await fetch(url + '/' + id, {
       method: 'GET',
       headers: setHeader,
     }).then(response => response.json())

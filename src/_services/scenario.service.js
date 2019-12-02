@@ -1,9 +1,11 @@
+import { baseUrl } from "../_helpers";
+
 export const scenarioService = {
     getAll,
     add
   };
   
-  let url = 'http://f8867ec3.ngrok.io/admin/api/v1/scenarios';
+  let url = baseUrl + '/scenarios';
   
   var setHeader = new Headers({
     'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
