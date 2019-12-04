@@ -69,11 +69,6 @@ class DashboardAdmin extends React.Component {
                                 <span> Projects</span>
                             </a>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#charts" onClick={() => { this.setState({ page: "charts" }) }}>
-                                <i className="fa fa-line-chart fa-lg"></i>
-                                <span> Charts</span></a>
-                        </li>
                     </ul>
                 </div>
                 <div className="content">

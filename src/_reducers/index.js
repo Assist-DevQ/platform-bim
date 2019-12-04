@@ -7,6 +7,7 @@ import { users } from './users.reducer';
 import { alert } from './alert.reducer';
 import { scenarios } from './scenarios.reducer';
 import { project } from './projectId.reducer';
+import {scenario} from './scenarioId.reducer'
 
 const rootReducer = combineReducers({
   authentication,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   projects,
   project,
   scenarios,
+  scenario,
   users,
   alert
 });

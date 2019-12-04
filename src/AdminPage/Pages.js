@@ -1,8 +1,7 @@
 import React from "react";
 import { connect } from 'react-redux';
-import { userActions, projectActions, projectIdActions, scenarioActions } from "../_actions";
+import { userActions, projectActions, projectIdActions, scenarioActions, scenarioIdActions } from "../_actions";
 import image_card from '../assets/img/img_index.jpg';
-//import image_modal from '../assets/img/imag1.jpg';
 
 class Pages extends React.Component {
     constructor(props) {
@@ -21,9 +20,7 @@ class Pages extends React.Component {
             id: 0,
             submitted: false,
             sc: false,
-            images: [],
-            diffImages: [],
-            flag: false
+            branchSelectedId: 0,
         }
 
         this.setId = this.setId.bind(this);
@@ -33,15 +30,16 @@ class Pages extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleSubmitUpdate = this.handleSubmitUpdate.bind(this);
         this.handleSubmitScenario = this.handleSubmitScenario.bind(this);
+        this.handleChangeSelectList = this.handleChangeSelectList.bind(this);
         this.resetModal = this.resetModal.bind(this);
         this.resetModalScenario = this.resetModalScenario.bind(this);
     }
 
-    getImages() {
-        this.setState({
-            images: ["https://techcrunch.com/wp-content/uploads/2017/01/messaging-apps.jpg?w=730&crop=1", "https://techcrunch.com/wp-content/uploads/2017/01/messaging-apps.jpg?w=730&crop=1"],
-            diffImages: ["https://cnet2.cbsistatic.com/img/Ci83PgMALhPKBqjzqTYdOr4voz0=/1092x0/2019/06/20/c2637498-b494-4916-bcf8-a3e1b7d96790/apple-ios-apps.jpg", "https://cnet2.cbsistatic.com/img/Ci83PgMALhPKBqjzqTYdOr4voz0=/1092x0/2019/06/20/c2637498-b494-4916-bcf8-a3e1b7d96790/apple-ios-apps.jpg"]
-        })
+    getImages(sc_id) {
+        if (this.props.project.branches[this.state.branchSelectedId].current_hash !== undefined) {
+            const other = this.props.project.branches[this.state.branchSelectedId].current_hash
+            this.props.getScenarioById(this.state.project.id, sc_id, other);
+        }
     }
 
     handleChange(event) {
@@ -64,6 +62,10 @@ class Pages extends React.Component {
                 [name]: value
             }
         });
+    }
+
+    handleChangeSelectList(event) {
+        this.setState({ branchSelectedId: event.target.value })
     }
 
     componentDidMount() {
@@ -303,13 +305,13 @@ class Pages extends React.Component {
                                                 <div className="card-body">
                                                     <h5 className="card-title">{scenarioS.name}</h5>
                                                     <div className="input-group">
-                                                        {this.props.project.branches && this.props.project.branches.map(branch =>
-                                                            <select key={branch.id} className="form-control">
-                                                                <option>{branch.name}</option>
-                                                            </select>
-                                                        )}
+                                                        <select className="form-control" onChange={this.handleChangeSelectList}>
+                                                            {this.props.project.branches && this.props.project.branches.map((branch, index) =>
+                                                                <option key={index} value={index}>{branch.name}</option>
+                                                            )}
+                                                        </select>
                                                         &nbsp;&nbsp;&nbsp;
-                                                        <button className="btn btn-dark text-white" href="#open" data-toggle="modal" data-target="#openScenario" onClick={() => { this.getImages(); this.setState({ scenario: { id: scenarioS.id, name: scenarioS.name } }) }}>Open</button>
+                                                        <button className="btn btn-dark text-white" href="#open" data-toggle="modal" data-target="#openScenario" onClick={() => { this.setState({ scenario: { id: scenarioS.id, name: scenarioS.name } }); this.getImages(scenarioS.id) }}>Open</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -320,18 +322,6 @@ class Pages extends React.Component {
                         </div>
                     </div>
                 }
-                {page === "charts" &&
-                    <div className="container-fluid">
-                        <ol className="breadcrumb">
-                            <li className="breadcrumb-item">
-                                <div>Dashboard</div>
-                            </li>
-                            <li className="breadcrumb-item active">Charts</li>
-                        </ol>
-
-                    </div>
-                }
-
                 <div className="modal fade" id="deleteModal" tabIndex="-1" role="dialog" aria-hidden="true">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
@@ -473,35 +463,42 @@ class Pages extends React.Component {
                     <div className="modal-dialog modal-full" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h5 className="modal-title">Project name: {project.name}<br />Scenario name: {scenario.name}</h5>
+                                <h5 className="modal-title">Project name: {project.name}<br />Scenario name: {scenario.name} </h5>
                                 <button className="close" type="button" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">×</span>
                                 </button>
                             </div>
-                            {
-                                this.state.images.map((source, index) =>
-                                    <div key={index} className="modal-body boxmodal">
-                                        <div><h5>Original Image</h5><img src={source} className="imgmodal" alt="" /></div>
-                                        {this.state.flag ?
-                                            <div><h5>Diff Image</h5><img src={this.state.diffImages[index]} className="imgmodal borderGreen" alt="" /></div> :
-                                            <div><h5>Diff Image</h5><img src={this.state.diffImages[index]} className="imgmodal borderRed" alt="" /></div>
-                                        }
-                                    </div>
-                                )
+                            {this.props.scenario.baseImages &&
+                                <div>
+                                    {(this.props.scenario.hasDiff && this.props.scenario.hasDiff.indexOf(true) === -1 ?
+                                        <h4 className="alert alert-success text-center" role="alert">Test passed!</h4> :
+                                        <h4 className="alert alert-danger text-center" role="alert">Test failed!</h4>)
+                                    }
+                                    {this.props.scenario.baseImages.map((source, index) =>
+                                        <div key={index} className="modal-body boxmodal">
+                                            <div><h5>Original Image</h5><img src={source} className="imgmodal" alt="" /></div>
+                                            {!this.props.scenario.hasDiff[index] ?
+                                                <div><h5>Diff Image</h5><img src={this.props.scenario.diffImages[index]} className="imgmodal borderGreen" alt="" /></div> :
+                                                <div><h5>Diff Image</h5><img src={this.props.scenario.diffImages[index]} className="imgmodal borderRed" alt="" /></div>
+                                            }
+                                        </div>
+                                    )
+                                    }
+                                </div>
                             }
                         </div>
                     </div>
                 </div>
                 {localStorage.setItem('page', page)}
-            </div>
+            </div >
         );
     }
 }
 
 function mapState(state) {
-    const { users, authentication, projects, project, scenarios } = state;
+    const { users, authentication, projects, project, scenarios, scenario } = state;
     const { user } = authentication;
-    return { user, users, projects, project, scenarios };
+    return { user, users, projects, project, scenarios, scenario };
 }
 
 const actions = {
@@ -514,6 +511,7 @@ const actions = {
     updateProject: projectActions.update,
     getScenarios: scenarioActions.getAll,
     addScenario: scenarioActions.add,
+    getScenarioById: scenarioIdActions.getById,
 }
 
 const connectedPage = connect(mapState, actions)(Pages);

@@ -1,4 +1,4 @@
-import { baseUrl } from "../_helpers";
+import { baseUrl, setHeader } from "../_helpers";
 
 export const scenarioService = {
     getAll,
@@ -6,11 +6,6 @@ export const scenarioService = {
   };
   
   let url = baseUrl + '/scenarios';
-  
-  var setHeader = new Headers({
-    'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
-    'Content-Type': 'application/json'
-  })
   
   async function getAll(id) {
     try {
@@ -35,7 +30,6 @@ export const scenarioService = {
           }
         })
       }).then(res => res.json())
-      //return {scenario: {id: 2, name: "Login scenario"}}
     } catch (error) {
       console.error(error);
     }

@@ -1,4 +1,4 @@
-import { baseUrl } from "../_helpers";
+import { baseUrl, setHeader } from "../_helpers";
 
 export const projectService = {
   getAll,
@@ -9,11 +9,6 @@ export const projectService = {
 
 //http://e99b0382.ngrok.io/docs/admin
 let url = baseUrl + '/projects';
-
-var setHeader = new Headers({
-  'Authorization': 'Basic dXNlcm5hbWU6cGFzc3dvcmQ=',
-  'Content-Type': 'application/json'
-})
 
 async function getAll() {
   try {
