@@ -1,6 +1,7 @@
 //localStorage.clear();
 // array in local storage for registered users
 let users = JSON.parse(localStorage.getItem('users')) || []
+users.push({ id: 1123, username: 'test@test.ro', password: 'test', firstName: 'Test', lastName: 'User' })
 //let user = [{ id: 1, username: 'test@yahoo.com', password: 'test', firstName: 'Test', lastName: 'User' }];
 //users.push(user)
 //localStorage.setItem('users', JSON.stringify(users));
