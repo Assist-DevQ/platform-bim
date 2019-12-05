@@ -9,9 +9,9 @@ async function getById(proj_id, sc_id, current_hash) {
   const first = await getByIdbase(proj_id, sc_id, current_hash)
   if(first.runs.length===2)
   return {
-    baseImages: first.runs[0].images_list,
-    diffImages: first.runs[1].images_list,
-    hasDiff: first.runs[1].has_diff
+    baseImages: getByType(first.runs, 'baseline').images_list,
+    diffImages: getByType(first.runs, 'diff').images_list,
+    hasDiff: getByType(first.runs, 'diff').has_diff
   }
   else
   return {
@@ -20,6 +20,11 @@ async function getById(proj_id, sc_id, current_hash) {
     hasDiff: first.runs[0].has_diff
   }
 }
+
+function getByType(runs, type) {
+  return runs.find(r => r.type === type)
+}
+
 async function getByIdbase(proj_id, sc_id, current_hash) {
   try {
     return await fetch(url + '/' + sc_id + '?project_id='

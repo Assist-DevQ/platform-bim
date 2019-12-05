@@ -232,8 +232,8 @@ class Pages extends React.Component {
                                             <thead className="thead-dark">
                                                 <tr>
                                                     <th scope="col">ID</th>
-                                                    <th scope="col">Project Name</th>
                                                     <th scope="col">Repository link</th>
+                                                    <th scope="col">Project Name</th>
                                                     <th scope="col">Production URL</th>
                                                     <th scope="col">Delete</th>
                                                     <th scope="col">Edit</th>
@@ -244,8 +244,8 @@ class Pages extends React.Component {
                                                 {projects.items.map((projectS) =>
                                                     <tr key={projectS.id}>
                                                         <th scope="row">{projectS.id} </th>
-                                                        <td>{projectS.name}</td>
                                                         <td>{projectS.repository_link}</td>
+                                                        <td>{projectS.name}</td>
                                                         <td>{projectS.production_url}</td>
                                                         <td>
                                                             {
