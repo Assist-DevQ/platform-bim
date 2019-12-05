@@ -37,7 +37,7 @@ class LoginPage extends React.Component {
     }
 
     render() {
-       // const { loggingIn } = this.props;
+       const { loggingIn } = this.props;
         const { email, password, submitted } = this.state;
         return (
             <div>
