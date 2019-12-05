@@ -1,1 +1,1 @@
-export const baseUrl = 'http://e99b0382.ngrok.io/admin/api/v1';
+export const baseUrl = 'http://localhost:3002/admin/api/v1';
