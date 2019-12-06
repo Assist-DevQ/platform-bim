@@ -28,12 +28,13 @@ class LoginPage extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-
-        this.setState({ submitted: true });
-        const { email, password } = this.state;
-        if (email && password) {
-            this.props.login(email, password);
-        }
+        setTimeout(() => {
+            this.setState({ submitted: true });
+            const { email, password } = this.state;
+            if (email && password) {
+                this.props.login(email, password);
+            }
+        }, 50)
     }
 
     render() {
