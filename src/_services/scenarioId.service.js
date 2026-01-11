@@ -9,9 +9,9 @@ async function getById(proj_id, sc_id, current_hash) {
   const first = await getByIdbase(proj_id, sc_id, current_hash)
   if(first.runs.length===2)
   return {
-    baseImages: first.runs[0].images_list,
-    diffImages: first.runs[1].images_list,
-    hasDiff: first.runs[1].has_diff
+    baseImages: first.runs[1].images_list,
+    diffImages: first.runs[0].images_list,
+    hasDiff: first.runs[0].has_diff
   }
   else
   return {
